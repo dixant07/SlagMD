@@ -1,0 +1,55 @@
+units           real
+dimension       3
+boundary        p p p
+atom_style      charge
+
+pair_style      born/coul/long 10.0 8.0 
+kspace_style    pppm 1.0e-4
+
+# read equilibrium data (generated from equilibrium.in)
+read_data       data.slag_500_equilibrated
+
+# coefficients
+pair_coeff 1 1 0.092046 0.080000 2.344000 484.046367 0.0
+pair_coeff 1 2 0.072486 0.063000 1.892400 530.299498 0.0
+pair_coeff 1 3 0.092046 0.080000 2.066000 312.476577 0.0
+pair_coeff 1 4 0.085142 0.074000 1.957200 396.056095 0.0
+pair_coeff 1 5 0.204815 0.178000 2.993500 974.646272 0.0
+
+pair_coeff 2 2 0.052926 0.046000 1.440800 580.975430 0.0
+pair_coeff 2 3 0.072486 0.063000 1.614400 342.339245 0.0
+pair_coeff 2 4 0.065582 0.057000 1.505600 433.906477 0.0
+pair_coeff 2 5 0.185255 0.161000 2.541900 1067.792591 0.0
+
+pair_coeff 3 3 0.092046 0.080000 1.788000 201.720232 0.0
+pair_coeff 3 4 0.085142 0.074000 1.679200 255.674845 0.0
+pair_coeff 3 5 0.204815 0.178000 2.715500 629.185791 0.0
+
+pair_coeff 4 4 0.078239 0.068000 1.570400 324.062027 0.0
+pair_coeff 4 5 0.197912 0.172000 2.606700 797.495048 0.0
+
+pair_coeff 5 5 0.317586 0.276000 3.643000 1962.274140 0.0
+
+
+neighbor        2.0 bin
+neigh_modify    delay 0 every 1 check yes
+timestep        1.0 
+
+# output
+thermo          100
+thermo_style    custom step temp press vol density pe ke etotal
+dump            1 all atom 100 dump.heating_NPT.lammpstrj
+
+reset_timestep  0
+
+# heating from 300 K to 6000 K (NPT)
+fix             1 all npt temp 300.0 6000.0 100.0 iso 0.0 0.0 1000.0
+
+run             200000  # 200 ps
+unfix           1
+
+# equilibrate at 6000 K (NPT)
+fix             2 all npt temp 6000.0 6000.0 100.0 iso 0.0 0.0 1000.0
+
+run             100000  # 100 ps
+write_data      data.slag_6000K_NPT pair ij
