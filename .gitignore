@@ -8,3 +8,8 @@ log.*
 *.py
 *.zip
 structural_analysis/archive/
+al2o3(corrundum)
+structural_analysis/scripts/aluminate_new.m
+structural_analysis/scripts/coordination_num_new.m
+structural_analysis/scripts/partial_rdf_new.m
+
