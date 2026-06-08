@@ -1,9 +1,9 @@
 clear all;
 clc;
 
-filename = 'dump.random_full.lammpstrj'; 
-L = 17.750683960000;                     
-rmax = 8.87534198;
+filename = 'dump.slag.lammpstrj'; 
+L = 44.0;                     
+rmax = 22.0;
 dr = 0.1;
 
 trj = readlines(filename);
